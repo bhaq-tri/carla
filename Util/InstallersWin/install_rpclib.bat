@@ -67,6 +67,13 @@ if not exist "%RPC_BUILD_DIR%" (
 cd "%RPC_BUILD_DIR%"
 echo %FILE_N% Generating build...
 
+echo 'cmake .. -G "Visual Studio 16 2019" -A x64^
+        -DCMAKE_BUILD_TYPE=Release^
+        -DRPCLIB_BUILD_EXAMPLES=OFF^
+        -DCMAKE_CXX_FLAGS_RELEASE="/MD /MP"^
+        -DCMAKE_INSTALL_PREFIX="%RPC_INSTALL_DIR:\=/%"^
+        "%RPC_SRC_DIR%"'
+
 cmake .. -G "Visual Studio 16 2019" -A x64^
         -DCMAKE_BUILD_TYPE=Release^
         -DRPCLIB_BUILD_EXAMPLES=OFF^
@@ -75,6 +82,7 @@ cmake .. -G "Visual Studio 16 2019" -A x64^
         "%RPC_SRC_DIR%"
 if %errorlevel% neq 0 goto error_cmake
 
+echo '%cd%'
 echo %FILE_N% Building...
 cmake --build . --config Release --target install
 

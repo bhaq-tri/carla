@@ -90,6 +90,7 @@ if %REMOVE_INTERMEDIATE% == true (
 )
 
 cd "%PYTHON_LIB_PATH%"
+echo "%cd%"
 rem if exist "%PYTHON_LIB_PATH%dist" goto already_installed
 
 rem ============================================================================
@@ -109,7 +110,7 @@ rem Build for Python 3
 rem
 if %BUILD_FOR_PYTHON3%==true (
     echo Building Python API for Python 3.
-    py -3 setup.py bdist_egg bdist_wheel
+    py -3.8 setup.py bdist_egg bdist_wheel
     if %errorlevel% neq 0 goto error_build_wheel
 )
 
@@ -155,4 +156,3 @@ rem ============================================================================
 :bad_exit
     endlocal
     exit /b %errorlevel%
-

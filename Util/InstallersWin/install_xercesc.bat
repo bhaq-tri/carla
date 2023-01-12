@@ -40,7 +40,7 @@ rem -- Local Variables ---------------------------------------------------------
 rem ============================================================================
 
 set XERCESC_BASENAME=xerces-c
-set XERCESC_VERSION=3.2.3
+set XERCESC_VERSION=3.2.4
 
 rem xerces-c-x.x.x
 set XERCESC_TEMP_FOLDER=%XERCESC_BASENAME%-%XERCESC_VERSION%
@@ -87,7 +87,7 @@ if not exist "%XERCESC_SRC_DIR%" (
     del "%XERCESC_TEMP_FILE_DIR%"
     echo %FILE_N% Removing dir "%BUILD_DIR%manifest"
     rmdir /s/q "%BUILD_DIR%manifest"
-    
+
     echo %FILE_N% Renaming dir %XERCESC_TEMP_FOLDER_DIR% to %XERCESC_BASENAME%-%XERCESC_VERSION%-source
     rename "%XERCESC_TEMP_FOLDER_DIR%" "%XERCESC_BASENAME%-%XERCESC_VERSION%-source"
 ) else (
@@ -121,7 +121,7 @@ cmake .. -G "Visual Studio 16 2019" -A x64^
   "%BUILD_DIR%%XERCESC_BASENAME%-%XERCESC_VERSION%-source"
 if %errorlevel% neq 0 goto error_cmake
 
-cmake --build . --config Release --target install 
+cmake --build . --config Release --target install
 
 goto success
 
