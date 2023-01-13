@@ -396,6 +396,11 @@ namespace detail {
     _pimpl->AsyncCall("add_actor_force_at_location", actor, force, location);
   }
 
+  void Client::UpdateDataLineRawData(rpc::ActorId actor, int &data) {
+    // This defines the RPC call with the ActorId and the data.
+    _pimpl->AsyncCall("update_data_line_raw_data", actor, data);
+  }
+
   void Client::AddActorAngularImpulse(rpc::ActorId actor, const geom::Vector3D &vector) {
     _pimpl->AsyncCall("add_actor_angular_impulse", actor, vector);
   }

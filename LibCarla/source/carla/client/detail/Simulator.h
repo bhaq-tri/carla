@@ -580,6 +580,16 @@ namespace detail {
 
     void UnSubscribeFromSensor(const Sensor &sensor);
 
+    void UpdateSplineData(Actor &actor, const geom::Location &location) {
+      log_error("/LibCarla/source/carla/client/detail/Simulator.h:");
+      _client.SetActorLocation(actor.GetId(), location);
+    }
+
+    void UpdateRawData(Actor &actor, int &data) {
+      log_error("/LibCarla/source/carla/client/detail/Simulator.h: actor.GetId()=", actor.GetId());
+      _client.UpdateDataLineRawData(actor.GetId(), data);
+    }
+
     /// @}
     // =========================================================================
     /// @name Operations with traffic lights

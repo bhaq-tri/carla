@@ -290,7 +290,7 @@ namespace detail {
         const rpc::WalkerBoneControlIn &bones);
 
     void BlendPose(
-        rpc::ActorId walker, 
+        rpc::ActorId walker,
         float blend);
 
     void GetPoseFromAnimation(
@@ -357,6 +357,9 @@ namespace detail {
         std::function<void(Buffer)> callback);
 
     void UnSubscribeFromStream(const streaming::Token &token);
+
+    // Add the function declaration.
+    void UpdateDataLineRawData(rpc::ActorId actor, int &data);
 
     void DrawDebugShape(const rpc::DebugShape &shape);
 
