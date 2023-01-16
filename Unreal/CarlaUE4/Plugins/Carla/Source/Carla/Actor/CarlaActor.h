@@ -309,6 +309,33 @@ public:
     return ECarlaServerResponse::ActorTypeMismatch;
   }
 
+  virtual ECarlaServerResponse UpdateRawDataLineData(int)
+  {
+    // This virtual function will be overwritten by the child class.
+    // It is required because of how the communication relies on the FActor
+    // class.
+    UE_LOG(LogTemp, Warning, TEXT("ECarlaServerResponse UpdateRawDataLineData(int) "));
+    return ECarlaServerResponse::ActorTypeMismatch;
+  }
+
+  virtual ECarlaServerResponse UpdateSplineDataLineData(std::vector<int>)
+  {
+    // This virtual function will be overwritten by the child class.
+    // It is required because of how the communication relies on the FActor
+    // class.
+    UE_LOG(LogTemp, Warning, TEXT("ECarlaServerResponse CarlaActor::UpdateSplineDataLineData(int) "));
+    return ECarlaServerResponse::ActorTypeMismatch;
+  }
+
+  virtual ECarlaServerResponse UpdateSpline(std::vector<carla::geom::Vector3D>)
+  {
+    // This virtual function will be overwritten by the child class.
+    // It is required because of how the communication relies on the FActor
+    // class.
+    UE_LOG(LogTemp, Warning, TEXT("ECarlaServerResponse CarlaActor::UpdateSpline(std::vector<geom::Vector3D>)"));
+    return ECarlaServerResponse::ActorTypeMismatch;
+  }
+
   virtual ECarlaServerResponse EnableChronoPhysics(uint64_t, float,
       const FString&, const FString&, const FString&, const FString&)
   {
@@ -500,6 +527,10 @@ public:
       carla::rpc::ActorState InState,
       UWorld* World);
 
+  // Add the necessary override for the FSensorActor here.
+  ECarlaServerResponse UpdateRawDataLineData(int data) override;
+  ECarlaServerResponse UpdateSplineDataLineData(std::vector<int> data) override;
+  ECarlaServerResponse UpdateSpline(std::vector<carla::geom::Vector3D> data) override;
 };
 
 class FTrafficSignActor : public FCarlaActor
@@ -564,7 +595,7 @@ public:
   virtual ECarlaServerResponse GetWalkerControl(FWalkerControl&) final;
 
   virtual ECarlaServerResponse GetBonesTransform(FWalkerBoneControlOut&) final;
-  
+
   virtual ECarlaServerResponse SetBonesTransform(const FWalkerBoneControlIn&) final;
 
   virtual ECarlaServerResponse BlendPose(float Blend);

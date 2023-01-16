@@ -580,13 +580,18 @@ namespace detail {
 
     void UnSubscribeFromSensor(const Sensor &sensor);
 
-    void UpdateSplineData(Actor &actor, const geom::Location &location) {
-      log_error("/LibCarla/source/carla/client/detail/Simulator.h:");
-      _client.SetActorLocation(actor.GetId(), location);
+    void UpdateSplineData(Actor &actor, std::vector<int> &location) {
+      log_info("Simulator::UpdateSplineData - actor.GetId()=", actor.GetId());
+      _client.UpdateDataLineSplineData(actor.GetId(), location);
+    }
+
+    void UpdateSpline(Actor &actor, std::vector<geom::Vector3D> &location) {
+      log_info("Simulator::UpdateSpline - actor.GetId()=", actor.GetId());
+      _client.UpdateSpline(actor.GetId(), location);
     }
 
     void UpdateRawData(Actor &actor, int &data) {
-      log_error("/LibCarla/source/carla/client/detail/Simulator.h: actor.GetId()=", actor.GetId());
+      log_info("Simulator::UpdateRawData actor.GetId()=", actor.GetId());
       _client.UpdateDataLineRawData(actor.GetId(), data);
     }
 

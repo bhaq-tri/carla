@@ -11,6 +11,7 @@
 #include "carla/client/Actor.h"
 #include "carla/client/LaneInvasionSensor.h"
 #include "carla/client/DataLineSensor.h"
+#include "carla/client/RaceLineSensor.h"
 #include "carla/client/ServerSideSensor.h"
 #ifdef RSS_ENABLED
 #include "carla/rss/RssSensor.h"
@@ -84,8 +85,14 @@ namespace detail {
 #endif
     } else if (description.description.id == "sensor.other.data_line") {
       // Add the Client/Actor here to to be constructed from the PythonAPI.
+      log_info("ActorFactory::MakeActor - making the dataline sensor");
       return MakeActorImpl<DataLineSensor>(std::move(init), gc);
+    } else if (description.description.id == "sensor.other.race_line") {
+      // Add the Client/Actor here to to be constructed from the PythonAPI.
+      log_info("ActorFactory::MakeActor - making the raceline sensor");
+      return MakeActorImpl<RaceLineSensor>(std::move(init), gc);
     } else if (description.HasAStream()) {
+      log_info("ActorFactory::MakeActor - making the ServerSideSensor sensor");
       return MakeActorImpl<ServerSideSensor>(std::move(init), gc);
     } else if (StringUtil::StartsWith(description.description.id, "vehicle.")) {
       return MakeActorImpl<Vehicle>(std::move(init), gc);

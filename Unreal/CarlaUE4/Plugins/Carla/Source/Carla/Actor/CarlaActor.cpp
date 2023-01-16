@@ -17,6 +17,8 @@
 #include "Carla/Vehicle/MovementComponents/ChronoMovementComponent.h"
 #include "Carla/Traffic/TrafficLightBase.h"
 #include "Carla/Game/CarlaStatics.h"
+#include "Carla/Sensor/DataLineSensor.h"
+#include "Carla/Sensor/RaceLine.h"
 
 #include <compiler/disable-ue4-macros.h>
 #include "carla/rpc/LabelledPoint.h"
@@ -849,6 +851,58 @@ ECarlaServerResponse FVehicleActor::SetActorAutopilot(bool bEnabled, bool bKeepS
       return ECarlaServerResponse::AutoPilotNotSupported;
     }
     Controller->SetAutopilot(bEnabled, bKeepState);
+  }
+  return ECarlaServerResponse::Success;
+}
+
+ECarlaServerResponse FSensorActor::UpdateRawDataLineData(int data)
+{
+  if (IsDormant())
+  {
+  }
+  else
+  {
+    auto sensor = Cast<ADataLineSensor>(GetActor());
+    if (sensor == nullptr)
+    {
+      return ECarlaServerResponse::MissingActor;
+    }
+    sensor->UpdateRawParam(data);
+  }
+  return ECarlaServerResponse::Success;
+}
+
+ECarlaServerResponse FSensorActor::UpdateSplineDataLineData(std::vector<int> data)
+{
+  if (IsDormant())
+  {
+  }
+  else
+  {
+    auto sensor = Cast<ADataLineSensor>(GetActor());
+    if (sensor == nullptr)
+    {
+      return ECarlaServerResponse::MissingActor;
+    }
+    sensor->UpdateSpline(data);
+  }
+  return ECarlaServerResponse::Success;
+}
+
+ECarlaServerResponse FSensorActor::UpdateSpline(std::vector<carla::geom::Vector3D> data)
+{
+  if (IsDormant())
+  {
+  }
+  else
+  {
+    auto sensor = Cast<ARaceLine>(GetActor());
+    if (sensor == nullptr)
+    {
+      return ECarlaServerResponse::MissingActor;
+    }
+    UE_LOG(LogCarla, Log, TEXT("FSensorActor::UpdateSpline"));
+    sensor->SetSpline(data);
   }
   return ECarlaServerResponse::Success;
 }

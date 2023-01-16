@@ -26,6 +26,7 @@
 #include "carla/sensor/s11n/ObstacleDetectionEventSerializer.h"
 #include "carla/sensor/s11n/RadarSerializer.h"
 #include "carla/sensor/s11n/SemanticLidarSerializer.h"
+#include "carla/sensor/s11n/RaceLineSerializer.h"
 
 // 2. Add a forward-declaration of the sensor here.
 class ACollisionSensor;
@@ -44,6 +45,8 @@ class ASemanticSegmentationCamera;
 class AInstanceSegmentationCamera;
 class ARssSensor;
 class FWorldObserver;
+class ARaceLine;
+class ADataLineSensor;
 
 namespace carla {
 namespace sensor {
@@ -71,7 +74,9 @@ namespace sensor {
     std::pair<ASceneCaptureCamera *, s11n::ImageSerializer>,
     std::pair<ASemanticSegmentationCamera *, s11n::ImageSerializer>,
     std::pair<AInstanceSegmentationCamera *, s11n::ImageSerializer>,
-    std::pair<FWorldObserver *, s11n::EpisodeStateSerializer>
+    std::pair<FWorldObserver *, s11n::EpisodeStateSerializer>,
+    std::pair<ARaceLine *, s11n::RaceLineSerializer>,
+    std::pair<ADataLineSensor *, s11n::NoopSerializer>
   >;
 
 } // namespace sensor
@@ -88,6 +93,8 @@ namespace sensor {
 #include "Carla/Sensor/GnssSensor.h"
 #include "Carla/Sensor/InertialMeasurementUnit.h"
 #include "Carla/Sensor/LaneInvasionSensor.h"
+#include "Carla/Sensor/DataLineSensor.h"
+#include "Carla/Sensor/RaceLine.h"
 #include "Carla/Sensor/ObstacleDetectionSensor.h"
 #include "Carla/Sensor/OpticalFlowCamera.h"
 #include "Carla/Sensor/Radar.h"

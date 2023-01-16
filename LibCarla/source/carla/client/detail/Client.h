@@ -360,6 +360,8 @@ namespace detail {
 
     // Add the function declaration.
     void UpdateDataLineRawData(rpc::ActorId actor, int &data);
+    void UpdateDataLineSplineData(rpc::ActorId actor, std::vector<int> &data);
+    void UpdateSpline(rpc::ActorId actor, std::vector<geom::Vector3D> &data);
 
     void DrawDebugShape(const rpc::DebugShape &shape);
 
