@@ -401,6 +401,18 @@ namespace detail {
     _pimpl->AsyncCall("update_data_line_raw_data", actor, data);
   }
 
+  void Client::UpdateDataLineSplineData(rpc::ActorId actor, std::vector<int> &data) {
+    // This defines the RPC call with the ActorId and the data.
+    log_info("Client::UpdateDataLineSplineData - Make Async call.");
+    _pimpl->AsyncCall("update_data_line_spline_data", actor, data);
+  }
+
+  void Client::UpdateSpline(rpc::ActorId actor, std::vector<geom::Vector3D> &data) {
+    // This defines the RPC call with the ActorId and the data.
+    log_info("Client::UpdateSpline - Make Async call.");
+    _pimpl->AsyncCall("update_spline", actor, data);
+  }
+
   void Client::AddActorAngularImpulse(rpc::ActorId actor, const geom::Vector3D &vector) {
     _pimpl->AsyncCall("add_actor_angular_impulse", actor, vector);
   }

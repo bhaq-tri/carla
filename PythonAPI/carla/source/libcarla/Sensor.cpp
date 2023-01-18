@@ -7,11 +7,18 @@
 #include <carla/PythonUtil.h>
 #include <carla/client/ClientSideSensor.h>
 #include <carla/client/LaneInvasionSensor.h>
+#include <carla/client/RaceLineSensor.h>
 #include <carla/client/Sensor.h>
 #include <carla/client/ServerSideSensor.h>
+#include <carla/Logging.h>
 
 static void SubscribeToStream(carla::client::Sensor &self, boost::python::object callback) {
   self.Listen(MakeCallback(std::move(callback)));
+}
+
+static void PythonUpdateSpline(carla::client::RaceLineSensor& self, boost::python::list input) {
+  carla::log_info("PythonUpdateSpline called");
+  self.UpdateSpline(PythonLitstToVector<carla::geom::Vector3D>(input));
 }
 
 void export_sensor() {
@@ -40,4 +47,9 @@ void export_sensor() {
     .def(self_ns::str(self_ns::self))
   ;
 
+  class_<cc::RaceLineSensor, bases<cc::Sensor>, boost::noncopyable, boost::shared_ptr<cc::RaceLineSensor>>
+      ("RaceLineSensor", no_init)
+    .def(self_ns::str(self_ns::self))
+    .def("update_spline", &PythonUpdateSpline, (arg("data")))
+  ;
 }

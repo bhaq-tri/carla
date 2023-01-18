@@ -54,7 +54,8 @@ public:
     return Stream.GetToken();
   }
 
-  void Tick(const float DeltaTime) final;
+  // Remove 'FINAL' to modify the child 'Tick' function
+  void Tick(const float DeltaTime);
 
   virtual void PrePhysTick(float DeltaSeconds) {}
   virtual void PostPhysTick(UWorld *World, ELevelTick TickType, float DeltaSeconds) {}

@@ -20,6 +20,7 @@
 #include <carla/sensor/data/GnssMeasurement.h>
 #include <carla/sensor/data/RadarMeasurement.h>
 #include <carla/sensor/data/DVSEventArray.h>
+#include <carla/sensor/data/RaceLineSensorEvent.h>
 
 #include <carla/sensor/data/RadarData.h>
 
@@ -554,5 +555,18 @@ void export_sensor_data() {
     .def("to_array_t", CALL_RETURNING_LIST(csd::DVSEventArray, ToArrayT))
     .def("to_array_pol", CALL_RETURNING_LIST(csd::DVSEventArray, ToArrayPol))
     .def(self_ns::str(self_ns::self))
+  ;
+
+  class_<
+      csd::RaceLineSensorEvent,                    // actual type.
+      bases<cs::SensorData>,                 // parent type.
+      boost::noncopyable,                    // disable copy.
+      boost::shared_ptr<csd::RaceLineSensorEvent>  // use as shared_ptr.
+    >("RaceLineSensorEvent", no_init)              // name, and disable construction.
+    .def("__len__", &csd::RaceLineSensorEvent::size)
+    .def("__iter__", iterator<csd::RaceLineSensorEvent>())
+    .def("__getitem__", +[](const csd::RaceLineSensorEvent &self, size_t pos) -> carla::geom::Vector3D {
+      return self.at(pos);
+    })
   ;
 }

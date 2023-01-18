@@ -1055,6 +1055,32 @@ void FCarlaServer::FPimpl::BindActions()
     return R<void>::Success();
   };
 
+  BIND_SYNC(update_spline) << [this](
+      cr::ActorId ActorId,
+      std::vector<cr::Vector3D> data) -> R<void>
+  {
+    REQUIRE_CARLA_EPISODE();
+    FCarlaActor* CarlaActor = Episode->FindCarlaActor(ActorId);
+    UE_LOG(LogCarlaServer, Log, TEXT("CarlaServer::BIND_SYNC(update_spline)"));
+    if (!CarlaActor)
+    {
+      return RespondError(
+          "update_spline",
+          ECarlaServerResponse::ActorNotFound,
+          " Actor Id: " + FString::FromInt(ActorId));
+    }
+    ECarlaServerResponse Response =
+        CarlaActor->UpdateSpline(data);
+    if (Response != ECarlaServerResponse::Success)
+    {
+      return RespondError(
+          "update_spline",
+          Response,
+          " Actor Id: " + FString::FromInt(ActorId));
+    }
+    return R<void>::Success();
+  };
+
   BIND_SYNC(add_actor_torque) << [this](
       cr::ActorId ActorId,
       cr::Vector3D vector) -> R<void>
@@ -1407,9 +1433,9 @@ void FCarlaServer::FPimpl::BindActions()
           Response,
           " Actor Id: " + FString::FromInt(ActorId));
     }
-    
+
     std::vector<carla::rpc::BoneTransformDataOut> BoneData;
-    for (auto Bone : Bones.BoneTransforms) 
+    for (auto Bone : Bones.BoneTransforms)
     {
       carla::rpc::BoneTransformDataOut Data;
       Data.bone_name = std::string(TCHAR_TO_UTF8(*Bone.Get<0>()));
@@ -1445,7 +1471,7 @@ void FCarlaServer::FPimpl::BindActions()
           Response,
           " Actor Id: " + FString::FromInt(ActorId));
     }
-    
+
     return R<void>::Success();
   };
 
@@ -1471,7 +1497,7 @@ void FCarlaServer::FPimpl::BindActions()
           Response,
           " Actor Id: " + FString::FromInt(ActorId));
     }
-    
+
     return R<void>::Success();
   };
 
@@ -1496,7 +1522,7 @@ void FCarlaServer::FPimpl::BindActions()
           Response,
           " Actor Id: " + FString::FromInt(ActorId));
     }
-    
+
     return R<void>::Success();
   };
 
