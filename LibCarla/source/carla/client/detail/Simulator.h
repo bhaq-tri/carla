@@ -585,6 +585,21 @@ namespace detail {
       _client.UpdateSpline(actor.GetId(), location);
     }
 
+    void SetColor(Actor &actor, std::vector<float> &data) {
+      log_info("Simulator::SetColor - actor.GetId()=", actor.GetId());
+      _client.SetColor(actor.GetId(), data);
+    }
+
+    void SetArrowHorizontalOffset(Actor &actor, float &data) {
+      log_info("Simulator::SetArrowHorizontalOffset - actor.GetId()=", actor.GetId());
+      _client.SetArrowHorizontalOffset(actor.GetId(), data);
+    }
+
+    void SetArrowVerticalOffset(Actor &actor, float &data) {
+      log_info("Simulator::SetArrowVerticalOffset - actor.GetId()=", actor.GetId());
+      _client.SetArrowVerticalOffset(actor.GetId(), data);
+    }
+
 
     /// @}
     // =========================================================================

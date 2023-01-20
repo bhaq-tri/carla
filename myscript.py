@@ -1,4 +1,4 @@
-from pprint import pprint as print
+import time
 
 import carla
 
@@ -27,6 +27,8 @@ spawn_idx = 10
 # Create a vehicle
 transform = world.get_map().get_spawn_points()[1]
 vehicle_blueprints = world.get_blueprint_library().filter('*vehicle*')
+for blueprint in vehicle_blueprints:
+    print(blueprint.id)
 vehicle = world.try_spawn_actor(vehicle_blueprints[2], transform)
 spawn_idx+=1
 
@@ -41,7 +43,7 @@ for blueprint in sensor_blueprints:
 # print(f"Type of 'dataline' {type(dataline)}")
 # print(dir(dataline))
 
-raceline = world.try_spawn_actor(sensor_blueprints[0], spawn_points[spawn_idx], vehicle)
+raceline = world.try_spawn_actor(sensor_blueprints[0], spawn_points[spawn_idx])
 # print(f"Type of 'raceline' {type(raceline)}")
 # spawn_idx+=1
 
@@ -53,5 +55,17 @@ def callback(vectors):
 raceline.listen(callback)
 
 
-new_vec = [carla.Vector3D(i*1.0, i*2.0, i*3.0) for i in range(2,5)]
-raceline.update_spline(new_vec)
+new_vec = [carla.Vector3D(i*200.00, i*200.0, 50) for i in range(5)]
+color_vec = [0.0, 0.5, 1.0, 0.5, 0.0]
+# raceline.update_spline(new_vec)
+time.sleep(2.0)
+spectator.set_transform(raceline.get_transform())
+
+
+other =[
+    carla.Vector3D(1000, -400, 0),
+    carla.Vector3D(4000, -200, 0),
+    carla.Vector3D(3000,  400, 0),
+    carla.Vector3D(1500,  600, 0),
+    carla.Vector3D(3000,  800, 0)
+]

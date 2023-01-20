@@ -21,6 +21,21 @@ static void PythonUpdateSpline(carla::client::RaceLineSensor& self, boost::pytho
   self.UpdateSpline(PythonLitstToVector<carla::geom::Vector3D>(input));
 }
 
+static void PythonUpdateColor(carla::client::RaceLineSensor& self, boost::python::list input) {
+  carla::log_info("PythonUpdateColor called");
+  self.SetColor(PythonLitstToVector<float>(input));
+}
+
+static void PythonSetArrowHorizontalOffset(carla::client::RaceLineSensor& self, float input) {
+  carla::log_info("PythonSetArrowHorizontalOffset called");
+  self.SetArrowHorizontalOffset(input);
+}
+
+static void PythonSetArrowVerticalOffset(carla::client::RaceLineSensor& self, float input) {
+  carla::log_info("PythonSetArrowVerticalOffset called");
+  self.SetArrowVerticalOffset(input);
+}
+
 void export_sensor() {
   using namespace boost::python;
   namespace cc = carla::client;
@@ -51,5 +66,9 @@ void export_sensor() {
       ("RaceLineSensor", no_init)
     .def(self_ns::str(self_ns::self))
     .def("update_spline", &PythonUpdateSpline, (arg("data")))
+    .def("set_spline", &PythonUpdateSpline, (arg("data")))
+    .def("set_color_array", &PythonUpdateColor, (arg("data")))
+    .def("set_arrow_horizontal_offset", &PythonSetArrowHorizontalOffset, (arg("data")))
+    .def("set_arrow_vertical_offset", &PythonSetArrowVerticalOffset, (arg("data")))
   ;
 }

@@ -30,27 +30,32 @@ ARaceLine::ARaceLine(const FObjectInitializer &ObjectInitializer)
   RootComponent = Spline;
   Spline->bDrawDebug = true;
 
-  SplineHISM = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("SplineHISM"));
-  SplineHISM->SetupAttachment(Spline);
-
   // Setup the arrow mesh.
   // TODO: Make less brittle?
   ArrowMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ArrowMesh"));
   static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("StaticMesh'/Game/Carla/Blueprints/RaceLine/M_Arrow.M_Arrow'"));
   ArrowMesh->SetStaticMesh(MeshAsset.Object);
 
+  SplineHISM = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("SplineHISM"));
+  SplineHISM->SetupAttachment(Spline);
+
+  // Set the arrow mesh
+  SplineHISM->SetStaticMesh(ArrowMesh->GetStaticMesh());
+  // Needed to tell the HISM about the custom data field used to color the arrows.
+  SplineHISM->NumCustomDataFloats = 1;
+  ArrowVerticalOffset = 50;
+  ArrowHorizontalOffset = 120;
   // Debug tasks.
-  SplinePoints.push_back(carla::geom::Vector3D(100, -400, 0));
-  SplinePoints.push_back(carla::geom::Vector3D(400, -200, 0));
-  SplinePoints.push_back(carla::geom::Vector3D(300, 400, 0));
-  SplinePoints.push_back(carla::geom::Vector3D(150, 600, 0));
-  SplinePoints.push_back(carla::geom::Vector3D(300, 800, 0));
+  SplinePoints.push_back(carla::geom::Vector3D(1000, -400, 0));
+  SplinePoints.push_back(carla::geom::Vector3D(4000, -200, 0));
+  SplinePoints.push_back(carla::geom::Vector3D(3000,  400, 0));
+  SplinePoints.push_back(carla::geom::Vector3D(1500,  600, 0));
+  SplinePoints.push_back(carla::geom::Vector3D(3000,  800, 0));
   ColorArrayDetail.push_back(1.0);
   ColorArrayDetail.push_back(0.0);
   ColorArrayDetail.push_back(1.0);
   ColorArrayDetail.push_back(0.0);
   ColorArrayDetail.push_back(1.0);
-  ColorArrayDetail.push_back(0.0);
 
   FVector routePoint{0.0, 0.0 ,0.0};
   for (auto &it : SplinePoints)
@@ -62,16 +67,7 @@ ARaceLine::ARaceLine(const FObjectInitializer &ObjectInitializer)
     Spline->AddSplinePoint(routePoint, ESplineCoordinateSpace::World, true);
   }
 
-  // int idx = 0;
-  // ColorArray.SetNumUninitialized(ColorArrayDetail.size());
-  // for (auto &it : ColorArrayDetail)
-  // {
-  //   ColorArray[idx] = ColorArrayDetail[idx];
-  //   idx++;
-  // }
-  CalculateArrowLength();
-  AddArrowsToSpline();
-  ColorArrows();
+  UpdateAndDraw();
 }
 
 FActorDefinition ARaceLine::GetSensorDefinition()
@@ -117,6 +113,9 @@ void ARaceLine::Tick(float DeltaSeconds)
   }
 }
 
+// --------------------------------------------------------------------------
+// Setters.
+// --------------------------------------------------------------------------
 void ARaceLine::SetSpline(std::vector<carla::geom::Vector3D> &data)
 {
   // Copy the data.
@@ -126,7 +125,7 @@ void ARaceLine::SetSpline(std::vector<carla::geom::Vector3D> &data)
   USplineComponent* NewSpline = NewObject<USplineComponent>(this);
   FVector routePoint{0.0, 0.0 ,0.0};
 
-  Spline->ClearSplinePoints(true);
+  Spline->ClearSplinePoints();
   for (auto &it : SplinePoints)
   {
     UE_LOG(LogTemp, Log, TEXT("SplinePoints ('%f', '%f', '%f')"), it.x, it.y, it.z);
@@ -137,12 +136,47 @@ void ARaceLine::SetSpline(std::vector<carla::geom::Vector3D> &data)
   }
 
   // Update the Spline component.
-  UE_LOG(LogTemp, Log, TEXT("recompiled again"));
+  UpdateAndDraw();
+}
+
+void ARaceLine::SetColor(std::vector<float> &data)
+{
+  // Copy the data.
+  ColorArrayDetail = data;
+  UpdateAndDraw();
+  UE_LOG(LogTemp, Log, TEXT("SetColor"));
+}
+
+void ARaceLine::SetArrowHorizontalOffset(float &data)
+{
+  ArrowHorizontalOffset = data;
+  UpdateAndDraw();
+}
+
+void ARaceLine::SetArrowVerticalOffset(float &data)
+{
+  ArrowVerticalOffset = data;
+  UpdateAndDraw();
 }
 
 std::vector<carla::geom::Vector3D> ARaceLine::GetSpline()
 {
   return SplinePoints;
+}
+
+// --------------------------------------------------------------------------
+// Render Arrows.
+// --------------------------------------------------------------------------
+void ARaceLine::UpdateAndDraw()
+{
+  if (SplinePoints.size() != ColorArrayDetail.size())
+  {
+    UE_LOG(LogTemp, Warning, TEXT("SplinePoints.size(%d) != ColorArrayDetail.size(%d), try again!"), SplinePoints.size(), ColorArrayDetail.size());
+    return;
+  }
+  CalculateArrowLength();
+  AddArrowsToSpline();
+  ColorArrows();
 }
 
 void ARaceLine::CalculateArrowLength()
@@ -166,11 +200,8 @@ void ARaceLine::AddArrowsToSpline()
     return;
   }
 
-  // TODO: How is ArrowMesh set?
-  // Set the arrow mesh
-  SplineHISM->SetStaticMesh(ArrowMesh->GetStaticMesh());
-  // Needed to tell the HISM about the custom data field used to color the arrows.
-  SplineHISM->NumCustomDataFloats = 1;
+  SplineHISM->ClearInstances();
+
   // Fill the HISM.
   NumberOfArrows = FMath::FloorToInt(Spline->GetSplineLength()/ArrowLength);
   FVector CurrentLocation = FVector::ZeroVector;
@@ -192,6 +223,8 @@ void ARaceLine::AddArrowsToSpline()
 
     SplineHISM->AddInstance(InstanceTransform);
   }
+
+  // SplineHISM->;
 }
 
 float ARaceLine::GetColorWeightAtLocation(FVector Location)
@@ -205,7 +238,7 @@ float ARaceLine::GetColorWeightAtLocation(FVector Location)
   Weight = FMath::Fmod(InputKey, 1.0);
   DifferenceWeight = ColorArrayDetail[P2] - ColorArrayDetail[P1];
   FinalWeight = Weight * DifferenceWeight + ColorArrayDetail[P1];
-  UE_LOG(LogTemp, Log, TEXT("GetColorWeightAtLocation() P1=%d, InputKey=%f, Weight=%f, FinalWeight=%f "), P1, InputKey, Weight, FinalWeight);
+  // UE_LOG(LogTemp, Log, TEXT("GetColorWeightAtLocation() P1=%d, InputKey=%f, Weight=%f, FinalWeight=%f "), P1, InputKey, Weight, FinalWeight);
   return FinalWeight;
 }
 
@@ -214,7 +247,7 @@ void ARaceLine::ColorArrows()
   FVector Location;
   float ColorWeight = 0.0;
   bool IsValueSet = false;
-  for (int idx = 0; idx < NumberOfArrows - 1 ; idx++)
+  for (int idx = 0; idx < NumberOfArrows; idx++)
   {
     Location = Spline->GetLocationAtDistanceAlongSpline(ArrowLength * idx, ESplineCoordinateSpace::World);
     ColorWeight = GetColorWeightAtLocation(Location);

@@ -1081,6 +1081,84 @@ void FCarlaServer::FPimpl::BindActions()
     return R<void>::Success();
   };
 
+  BIND_SYNC(set_color) << [this](
+      cr::ActorId ActorId,
+      std::vector<float> data) -> R<void>
+  {
+    REQUIRE_CARLA_EPISODE();
+    FCarlaActor* CarlaActor = Episode->FindCarlaActor(ActorId);
+    UE_LOG(LogCarlaServer, Log, TEXT("CarlaServer::BIND_SYNC(set_color)"));
+    if (!CarlaActor)
+    {
+      return RespondError(
+          "set_color",
+          ECarlaServerResponse::ActorNotFound,
+          " Actor Id: " + FString::FromInt(ActorId));
+    }
+    ECarlaServerResponse Response =
+        CarlaActor->SetColor(data);
+    if (Response != ECarlaServerResponse::Success)
+    {
+      return RespondError(
+          "set_color",
+          Response,
+          " Actor Id: " + FString::FromInt(ActorId));
+    }
+    return R<void>::Success();
+  };
+
+  BIND_SYNC(set_arrow_horizontal_offset) << [this](
+      cr::ActorId ActorId,
+      float data) -> R<void>
+  {
+    REQUIRE_CARLA_EPISODE();
+    FCarlaActor* CarlaActor = Episode->FindCarlaActor(ActorId);
+    UE_LOG(LogCarlaServer, Log, TEXT("CarlaServer::BIND_SYNC(set_arrow_horizontal_offset)"));
+    if (!CarlaActor)
+    {
+      return RespondError(
+          "set_arrow_horizontal_offset",
+          ECarlaServerResponse::ActorNotFound,
+          " Actor Id: " + FString::FromInt(ActorId));
+    }
+    ECarlaServerResponse Response =
+        CarlaActor->SetArrowHorizontalOffset(data);
+    if (Response != ECarlaServerResponse::Success)
+    {
+      return RespondError(
+          "set_arrow_horizontal_offset",
+          Response,
+          " Actor Id: " + FString::FromInt(ActorId));
+    }
+    return R<void>::Success();
+  };
+
+  BIND_SYNC(set_arrow_vertical_offset) << [this](
+      cr::ActorId ActorId,
+      float data) -> R<void>
+  {
+    REQUIRE_CARLA_EPISODE();
+    FCarlaActor* CarlaActor = Episode->FindCarlaActor(ActorId);
+    UE_LOG(LogCarlaServer, Log, TEXT("CarlaServer::BIND_SYNC(set_arrow_vertical_offset)"));
+    if (!CarlaActor)
+    {
+      return RespondError(
+          "set_arrow_vertical_offset",
+          ECarlaServerResponse::ActorNotFound,
+          " Actor Id: " + FString::FromInt(ActorId));
+    }
+    ECarlaServerResponse Response =
+        CarlaActor->SetArrowVerticalOffset(data);
+    if (Response != ECarlaServerResponse::Success)
+    {
+      return RespondError(
+          "set_arrow_vertical_offset",
+          Response,
+          " Actor Id: " + FString::FromInt(ActorId));
+    }
+    return R<void>::Success();
+  };
+
   BIND_SYNC(add_actor_torque) << [this](
       cr::ActorId ActorId,
       cr::Vector3D vector) -> R<void>

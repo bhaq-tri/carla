@@ -318,6 +318,33 @@ public:
     return ECarlaServerResponse::ActorTypeMismatch;
   }
 
+  virtual ECarlaServerResponse SetColor(std::vector<float>)
+  {
+    // This virtual function will be overwritten by the child class.
+    // It is required because of how the communication relies on the FActor
+    // class.
+    UE_LOG(LogTemp, Warning, TEXT("ECarlaServerResponse CarlaActor::SetColor(std::vector<float>)"));
+    return ECarlaServerResponse::ActorTypeMismatch;
+  }
+
+  virtual ECarlaServerResponse SetArrowHorizontalOffset(float)
+  {
+    // This virtual function will be overwritten by the child class.
+    // It is required because of how the communication relies on the FActor
+    // class.
+    UE_LOG(LogTemp, Warning, TEXT("ECarlaServerResponse CarlaActor::SetArrowHorizontalOffset(float)"));
+    return ECarlaServerResponse::ActorTypeMismatch;
+  }
+
+  virtual ECarlaServerResponse SetArrowVerticalOffset(float)
+  {
+    // This virtual function will be overwritten by the child class.
+    // It is required because of how the communication relies on the FActor
+    // class.
+    UE_LOG(LogTemp, Warning, TEXT("ECarlaServerResponse CarlaActor::SetArrowVerticalOffset(float)"));
+    return ECarlaServerResponse::ActorTypeMismatch;
+  }
+
   virtual ECarlaServerResponse EnableChronoPhysics(uint64_t, float,
       const FString&, const FString&, const FString&, const FString&)
   {
@@ -511,6 +538,9 @@ public:
 
   // Add the necessary override for the FSensorActor here.
   ECarlaServerResponse UpdateSpline(std::vector<carla::geom::Vector3D> data) override;
+  ECarlaServerResponse SetColor(std::vector<float> data) override;
+  ECarlaServerResponse SetArrowHorizontalOffset(float data) override;
+  ECarlaServerResponse SetArrowVerticalOffset(float data) override;
 };
 
 class FTrafficSignActor : public FCarlaActor

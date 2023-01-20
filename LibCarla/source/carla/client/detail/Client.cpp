@@ -413,6 +413,24 @@ namespace detail {
     _pimpl->AsyncCall("update_spline", actor, data);
   }
 
+  void Client::SetColor(rpc::ActorId actor, std::vector<float> &data) {
+    // This defines the RPC call with the ActorId and the data.
+    log_info("Client::SetColor - Make Async call.");
+    _pimpl->AsyncCall("set_color", actor, data);
+  }
+
+  void Client::SetArrowHorizontalOffset(rpc::ActorId actor, float &data) {
+    // This defines the RPC call with the ActorId and the data.
+    log_info("Client::SetArrowHorizontalOffset - Make Async call.");
+    _pimpl->AsyncCall("set_arrow_horizontal_offset", actor, data);
+  }
+
+  void Client::SetArrowVerticalOffset(rpc::ActorId actor, float &data) {
+    // This defines the RPC call with the ActorId and the data.
+    log_info("Client::SetArrowVerticalOffset - Make Async call.");
+    _pimpl->AsyncCall("set_arrow_vertical_offset", actor, data);
+  }
+
   void Client::AddActorAngularImpulse(rpc::ActorId actor, const geom::Vector3D &vector) {
     _pimpl->AsyncCall("add_actor_angular_impulse", actor, vector);
   }

@@ -872,6 +872,60 @@ ECarlaServerResponse FSensorActor::UpdateSpline(std::vector<carla::geom::Vector3
   return ECarlaServerResponse::Success;
 }
 
+ECarlaServerResponse FSensorActor::SetColor(std::vector<float> data)
+{
+  if (IsDormant())
+  {
+  }
+  else
+  {
+    auto sensor = Cast<ARaceLine>(GetActor());
+    if (sensor == nullptr)
+    {
+      return ECarlaServerResponse::MissingActor;
+    }
+    UE_LOG(LogCarla, Log, TEXT("FSensorActor::SetColor"));
+    sensor->SetColor(data);
+  }
+  return ECarlaServerResponse::Success;
+}
+
+ECarlaServerResponse FSensorActor::SetArrowHorizontalOffset(float data)
+{
+  if (IsDormant())
+  {
+  }
+  else
+  {
+    auto sensor = Cast<ARaceLine>(GetActor());
+    if (sensor == nullptr)
+    {
+      return ECarlaServerResponse::MissingActor;
+    }
+    UE_LOG(LogCarla, Log, TEXT("FSensorActor::SetArrowHorizontalOffset"));
+    sensor->SetArrowHorizontalOffset(data);
+  }
+  return ECarlaServerResponse::Success;
+}
+
+ECarlaServerResponse FSensorActor::SetArrowVerticalOffset(float data)
+{
+  if (IsDormant())
+  {
+  }
+  else
+  {
+    auto sensor = Cast<ARaceLine>(GetActor());
+    if (sensor == nullptr)
+    {
+      return ECarlaServerResponse::MissingActor;
+    }
+    UE_LOG(LogCarla, Log, TEXT("FSensorActor::SetArrowVerticalOffset"));
+    sensor->SetArrowVerticalOffset(data);
+  }
+  return ECarlaServerResponse::Success;
+}
+
 ECarlaServerResponse FVehicleActor::ShowVehicleDebugTelemetry(bool bEnabled)
 {
   if (IsDormant())

@@ -44,6 +44,9 @@ namespace client {
     }
 
     void UpdateSpline(std::vector<geom::Vector3D> &data);
+    void SetColor(std::vector<float> &data);
+    void SetArrowHorizontalOffset(float &data);
+    void SetArrowVerticalOffset(float &data);
 
     bool Destroy() override;
 

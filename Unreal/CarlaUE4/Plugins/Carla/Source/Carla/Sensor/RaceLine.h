@@ -38,17 +38,17 @@ public:
   // Spline points
   void SetSpline(std::vector<carla::geom::Vector3D> &data);
   std::vector<carla::geom::Vector3D> GetSpline();
+  void SetColor(std::vector<float> &data);
 
+  void SetArrowHorizontalOffset(float &data);
+  void SetArrowVerticalOffset(float &data);
+
+private:
+  void UpdateAndDraw();
   void CalculateArrowLength();
   void AddArrowsToSpline();
   void ColorArrows();
   float GetColorWeightAtLocation(FVector Location);
-
-  // // NOTE: Might not be needed.
-  // void SetNumberOfElementsInColorArray();
-
-
-private:
 
   // --------------------------------------------------------------------------
   // Editable components from the PythonAPI.
@@ -64,7 +64,6 @@ private:
 
   // --------------------------------------------------------------------------
   // Race Line Properties.
-  // NOTE: Maybe editable?
   // --------------------------------------------------------------------------
   // Toe-to-Tip offset between each arrow.
   UPROPERTY(EditAnywhere)
@@ -82,9 +81,6 @@ private:
 
   UPROPERTY(VisibleAnywhere)
   UHierarchicalInstancedStaticMeshComponent* SplineHISM;
-
-  UPROPERTY(VisibleAnywhere)
-  TArray<float> ColorArray;
 
   // Holds the arrow static mesh.
   UPROPERTY(EditAnywhere)

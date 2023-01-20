@@ -362,6 +362,9 @@ namespace detail {
     void UpdateDataLineRawData(rpc::ActorId actor, int &data);
     void UpdateDataLineSplineData(rpc::ActorId actor, std::vector<int> &data);
     void UpdateSpline(rpc::ActorId actor, std::vector<geom::Vector3D> &data);
+    void SetColor(rpc::ActorId actor, std::vector<float> &data);
+    void SetArrowHorizontalOffset(rpc::ActorId actor, float &data);
+    void SetArrowVerticalOffset(rpc::ActorId actor, float &data);
 
     void DrawDebugShape(const rpc::DebugShape &shape);
 
