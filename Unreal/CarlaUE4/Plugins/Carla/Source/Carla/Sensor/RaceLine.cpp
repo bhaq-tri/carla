@@ -64,7 +64,7 @@ ARaceLine::ARaceLine(const FObjectInitializer &ObjectInitializer)
     routePoint[0] = it.x;
     routePoint[1] = it.y;
     routePoint[2] = it.z;
-    Spline->AddSplinePoint(routePoint, ESplineCoordinateSpace::World, true);
+    Spline->AddSplinePoint(routePoint, ESplineCoordinateSpace::Local, true);
   }
 
   UpdateAndDraw();
@@ -132,7 +132,7 @@ void ARaceLine::SetSpline(std::vector<carla::geom::Vector3D> &data)
     routePoint[0] = it.x;
     routePoint[1] = it.y;
     routePoint[2] = it.z;
-    Spline->AddSplinePoint(routePoint, ESplineCoordinateSpace::World, true);
+    Spline->AddSplinePoint(routePoint, ESplineCoordinateSpace::Local, true);
   }
 
   // Update the Spline component.
@@ -169,6 +169,7 @@ std::vector<carla::geom::Vector3D> ARaceLine::GetSpline()
 // --------------------------------------------------------------------------
 void ARaceLine::UpdateAndDraw()
 {
+  UE_LOG(LogTemp, Warning, TEXT("UpdateAndDraw"));
   if (SplinePoints.size() != ColorArrayDetail.size())
   {
     UE_LOG(LogTemp, Warning, TEXT("SplinePoints.size(%d) != ColorArrayDetail.size(%d), try again!"), SplinePoints.size(), ColorArrayDetail.size());
@@ -223,8 +224,6 @@ void ARaceLine::AddArrowsToSpline()
 
     SplineHISM->AddInstance(InstanceTransform);
   }
-
-  // SplineHISM->;
 }
 
 float ARaceLine::GetColorWeightAtLocation(FVector Location)
@@ -252,8 +251,5 @@ void ARaceLine::ColorArrows()
     Location = Spline->GetLocationAtDistanceAlongSpline(ArrowLength * idx, ESplineCoordinateSpace::World);
     ColorWeight = GetColorWeightAtLocation(Location);
     IsValueSet = SplineHISM->SetCustomDataValue(idx, 0, ColorWeight, false);
-
-    // Debug some shit.
-    UE_LOG(LogTemp, Log, TEXT("PerInstanceSMData.IsValidIndex(%d) = %d"), idx, SplineHISM->PerInstanceSMData.IsValidIndex(idx));
   }
 }
